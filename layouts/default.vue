@@ -1,23 +1,25 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
-      permanent
+      v-model="drawer"
+      clipped="clipped"
+      fixed
       app
     >
       <template #prepend>
-        <v-list-item>
+        <v-list-item two-line>
           <v-list-item-avatar>
             <img src="https://randomuser.me/api/portraits/women/81.jpg">
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>Jane Smith</v-list-item-title>
+            <v-list-item-title>{{ $auth.user.name }}</v-list-item-title>
+            <v-list-item-subtitle class="exit mt-2" @click="logout">
+              sair
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>
-
-      <v-divider />
-
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -35,13 +37,21 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-
+    <v-app-bar
+      clipped-left
+      fixed
+      app
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-toolbar-title v-text="title" />
+    </v-app-bar>
     <v-main>
       <v-container>
         <nuxt />
       </v-container>
     </v-main>
     <v-footer
+      absolute
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
@@ -51,6 +61,7 @@
 
 <script>
 export default {
+  name: 'Default',
   middleware: 'auth',
   data () {
     return {
@@ -62,20 +73,28 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-account',
           title: 'Alunos',
-          to: '/alunos'
+          to: '/students'
         }
-      ]
+      ],
+      title: 'Grupo A'
+    }
+  },
+  methods: {
+    logout () {
+      this.$auth.logout()
+        .then(() => {
+          this.router.push('/login')
+        })
     }
   }
 }
 </script>
-<style>
-.app-bar-logo {
-  margin: 0px;
-  width: 100%;
-  height: 60px;
-  padding: 4px 0;
+
+<style scoped>
+.exit:hover {
+  text-decoration: underline;
+  color: #34ebe8;
 }
 </style>

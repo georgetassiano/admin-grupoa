@@ -17,6 +17,7 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/css/main.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -48,12 +49,12 @@ export default {
     strategies: {
       laravelJWT: {
         provider: 'laravel/jwt',
-        url: process.env.VUE_APP_BASE_ROUTE_API || 'http://localhost/',
+        url: process.env.VUE_APP_BASE_ROUTE_API || 'http://localhost/api/',
         endpoints: {
-          login: { url: '/auth/login', method: 'post' },
-          refresh: { url: '/auth/refresh', method: 'post' },
-          user: { url: '/auth/me', method: 'post' },
-          logout: { url: '/auth/logout', method: 'post' }
+          login: { url: 'auth/login', method: 'post' },
+          refresh: { url: 'auth/refresh', method: 'post' },
+          user: { url: 'auth/me', method: 'post' },
+          logout: { url: 'auth/logout', method: 'post' }
         },
         token: {
           property: false,
@@ -61,6 +62,9 @@ export default {
         },
         refreshToken: {
           maxAge: 20160 * 60 // same as refresh_ttl but in seconds
+        },
+        user: {
+          property: 'data'
         }
       }
     },
@@ -74,7 +78,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.VUE_APP_BASE_ROUTE_API || 'http://localhost/',
+    baseURL: process.env.VUE_APP_BASE_ROUTE_API || 'http://localhost/api',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
