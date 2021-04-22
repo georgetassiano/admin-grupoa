@@ -17,6 +17,7 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/css/main.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -38,17 +39,52 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    // https://auth.nuxtjs.org/
+    '@nuxtjs/auth-next',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa'
   ],
 
+  auth: {
+    strategies: {
+      laravelJWT: {
+        provider: 'laravel/jwt',
+        url: process.env.VUE_APP_BASE_ROUTE_API || 'http://localhost/api/',
+        endpoints: {
+          login: { url: 'auth/login', method: 'post' },
+          refresh: { url: 'auth/refresh', method: 'post' },
+          user: { url: 'auth/me', method: 'post' },
+          logout: { url: 'auth/logout', method: 'post' }
+        },
+        token: {
+          property: false,
+          maxAge: 60 * 60
+        },
+        refreshToken: {
+          maxAge: 20160 * 60 // same as refresh_ttl but in seconds
+        },
+        user: {
+          property: 'data'
+        }
+      }
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/'
+    }
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: process.env.VUE_APP_BASE_ROUTE_API || 'http://localhost/api',
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en'
+      lang: 'pt-BR'
     }
   },
 
@@ -73,5 +109,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  watchers: {
+    webpack: {
+      aggregateTimeout:300,
+      poll: 1000
+    }
   }
 }
